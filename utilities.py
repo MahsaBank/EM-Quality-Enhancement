@@ -2,12 +2,6 @@
 import tensorflow as tf
 import math
 import numpy as np
-from matplotlib import cm
-
-
-def create_colmap():
-    colmap = cm.get_cmap('viridis', 256)
-    np.savetxt('cmap.csv', (colmap.colors[...,0:3]*255).astype(np.uint8), fmt='%d', delimiter=',')
 
     
 def crop_image(img, crop_size=[224, 224]):
