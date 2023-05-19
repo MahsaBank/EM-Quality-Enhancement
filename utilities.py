@@ -2,8 +2,14 @@
 import tensorflow as tf
 import math
 import numpy as np
+from matplotlib import cm
 
 
+def create_colmap():
+    colmap = cm.get_cmap('viridis', 256)
+    np.savetxt('cmap.csv', (colmap.colors[...,0:3]*255).astype(np.uint8), fmt='%d', delimiter=',')
+
+    
 def crop_image(img, crop_size=[224, 224]):
     img_shape = np.shape(img)
     i, j = np.random.randint(0, img_shape[0]-crop_size[0]+1), np.random.randint(0, img_shape[1]-crop_size[1]+1)
