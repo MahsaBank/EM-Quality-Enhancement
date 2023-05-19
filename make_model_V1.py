@@ -5,7 +5,6 @@ from keras.applications.resnet import ResNet50
 import tensorflow as tf
 
 
-
 def identity_block(x, filter):
     x_skip = x
     # layer 1
