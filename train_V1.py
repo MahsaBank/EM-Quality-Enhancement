@@ -10,14 +10,12 @@ from tools/utilities import DataSequence
 from keras.optimizers import Adam
 from keras.losses import mse
 from tools/make_model_V1 import make_resNet_model, make_with_resBlocks
-from tools/make_model_V2 import Emiqa
 
 
 def train(samples, base_model_name, batch_size, train_dir, epochs_train,
           available_weights, learning_rate, num_class):
           
     model = make_resNet_model(num_class=num_class)
-    # model = make_with_resBlocks(num_class=num_class, num_filter=16, num_block=3)
 
 
     if available_weights is not None:
@@ -41,7 +39,8 @@ def train(samples, base_model_name, batch_size, train_dir, epochs_train,
         monitor='val_loss',
         verbose=1,
         save_best_only=True)
-
+    
+    
     model.compile(optimizer=Adam(learning_rate=learning_rate), loss=mse)
     model.summary()
     model.fit_generator(
