@@ -5,7 +5,6 @@ import json
 import argparse
 import time
 import numpy as np
-from handlers.data_generator import TestDataGenerator
 from tools/make_model_v2 import Emiqa
 from tools/utilities import DataSequence
 from tools/model_make_v1 import make_resNet_model
