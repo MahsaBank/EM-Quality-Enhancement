@@ -1,25 +1,22 @@
 import argparse
 import json
 import os
-from make_model import Emiqa
+from tools/make_model_V2 import Emiqa
 from tensorflow.python.keras import backend as k
 from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow as tf
-from utilities import DataSequence
-from matplotlib import cm
-
-
-colmap = cm.get_cmap('viridis', 256)
-np.savetxt('cmap.csv', (colmap.colors[...,0:3]*255).astype(np.uint8), fmt='%d', delimiter=',')
+from tools/utilities import DataSequence
 
 
 def train(samples, base_model_name, batch_size, num_class, train_dir, epochs_train_all, epochs_train_dense,
-          available_weights, crop_size, do_multi_process, learning_rate_all, activation_function):
+          available_weights, crop_size, learning_rate_all, activation_function):
+          
     emiqa = Emiqa(base_model_name=base_model_name, num_class=num_class, activation_function=activation_function)
     emiqa.create()
     if available_weights is not None:
         emiqa.Emiqa_model.load_weights(available_weights)
+
     train_samples, test_samples = train_test_split(samples, test_size=0.05, shuffle=True, random_state=42)
     train_images_name = [train_samples[i]['image_name'] for i in range(len(train_samples))]
     train_labels = [train_samples[i]['label'] for i in range(len(train_samples))]
@@ -49,9 +46,6 @@ def train(samples, base_model_name, batch_size, num_class, train_dir, epochs_tra
         validation_data=validation_generator,
         epochs=epochs_train_dense,
         verbose=1,
-        use_multiprocessing=do_multi_process,
-        workers=2,
-        max_queue_size=30,
         callbacks=[tensorboard_callback, model_checkpoint_callback],
     )
 
@@ -66,9 +60,6 @@ def train(samples, base_model_name, batch_size, num_class, train_dir, epochs_tra
         epochs=epochs_train_dense+epochs_train_all,
         initial_epoch=epochs_train_dense,
         verbose=1,
-        use_multiprocessing=do_multi_process,
-        workers=2,
-        max_queue_size=30,
         callbacks=[tensorboard_callback, model_checkpoint_callback],
     )
     k.clear_session()
@@ -77,8 +68,7 @@ def train(samples, base_model_name, batch_size, num_class, train_dir, epochs_tra
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='train the Emiqa model for assessing the quality of EM images')
     parser.add_argument("--base_model_name", default='VGG16', type=str, help='It can be InceptionV3, and ...')
-    parser.add_argument('--num_class', type=int, default=4, help='the number of quality classes including good, very good, bad,'
-                                                     ' and very bad')
+    parser.add_argument('--num_class', type=int, default=1, help='the number of quality classes, in the case of regression num_class=1')
     parser.add_argument('--data_dir', default='./EM_quality_data.json', help='path/to/the/data/json/file')
     parser.add_argument('--train_dir', default='./', help='path/to/the/weights/and/logs/directory')
     parser.add_argument('--batch_size', default=20)
@@ -88,7 +78,6 @@ if __name__=='__main__':
     parser.add_argument('--learning_rate_all', default=0.001)
     parser.add_argument('--available_weights', default=None)
     parser.add_argument('--crop_size', default=[224,224])
-    parser.add_argument('--do_multiprocessing',default=False)
     parser.add_argument('--activation', default='softmax')
     args = parser.parse_args()
 
@@ -103,5 +92,5 @@ if __name__=='__main__':
     # train(**args.__dict__)
     train(samples=all_samples, base_model_name=args.base_model_name, batch_size=args.batch_size, num_class=args.num_class,
           train_dir=args.train_dir, epochs_train_all=args.epochs_train_all, epochs_train_dense=args.epochs_train_dense,
-          available_weights=args.available_weights, crop_size=args.crop_size, do_multi_process=args.do_multiprocessing,
+          available_weights=args.available_weights, crop_size=args.crop_size,
           learning_rate_all=args.learning_rate_all, activation_function=args.activation)
