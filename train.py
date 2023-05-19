@@ -13,9 +13,10 @@ from tools/make_model_V1 import make_resNet_model, make_with_resBlocks
 
 
 def train(samples, base_model_name, batch_size, train_dir, epochs_train,
-          available_weights, learning_rate):
-    model = make_resNet_model(num_class=1)
-    # model = make_with_resBlocks(num_class=1, num_filter=16, num_block=3)
+          available_weights, learning_rate, num_class):
+          
+    model = make_resNet_model(num_class=num_class)
+    # model = make_with_resBlocks(num_class=num_class, num_filter=16, num_block=3)
 
 
     if available_weights is not None:
@@ -24,10 +25,10 @@ def train(samples, base_model_name, batch_size, train_dir, epochs_train,
     train_samples, test_samples = train_test_split(samples, test_size=0.05, shuffle=True, random_state=42)
     train_images_name = [train_samples[i]['image_name'] for i in range(len(train_samples))]
     train_labels = [train_samples[i]['label'] for i in range(len(train_samples))]
-    train_generator = DataSequence(train_images_name, train_labels, batch_size, 1)
+    train_generator = DataSequence(train_images_name, train_labels, batch_size, num_class)
     test_images_name = [test_samples[i]['image_name'] for i in range(len(test_samples))]
     test_labels = [test_samples[i]['label'] for i in range(len(test_samples))]
-    validation_generator = DataSequence(test_images_name, test_labels, batch_size, 1)
+    validation_generator = DataSequence(test_images_name, test_labels, batch_size, num_class)
 
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=os.path.join(train_dir, 'logs'))
 
@@ -56,6 +57,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser(description='train the network for calculating the quality score of EM image patches')
     parser.add_argument("--base_model_name", default='resnet', type=str)
     parser.add_argument('--data_dir', default='./EM_quality_data.json', help='path/to/the/data/json/file')
+    parser.add_argument('--num_class', type=int, default=1, help='the number of quality classes, in the case of regression num-class=1')
     parser.add_argument('--train_dir', default='./', help='path/to/the/weights/and/logs/directory')
     parser.add_argument('--batch_size', default=20)
     parser.add_argument('--epochs_train', default=10)
@@ -75,4 +77,4 @@ if __name__=='__main__':
     
     train(samples=all_samples, base_model_name=args.base_model_name, batch_size=args.batch_size,
           train_dir=args.train_dir, epochs_train=args.epochs_train, available_weights=args.available_weights,
-          learning_rate=args.learning_rate)
+          learning_rate=args.learning_rate, num_class=args.num_class)
