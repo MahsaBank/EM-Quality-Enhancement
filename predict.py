@@ -14,10 +14,6 @@ import autokeras as ak
 from tools/utilities import get_data
 
 
-def predict(model, data_generator):
-    return model.predict_generator(data_generator, workers=8, use_multiprocessing=True, verbose=1)
-
-
 def main(base_model_name, weights_file, image_dir, predictions_file, model_file, img_format):
     
     test_images_name = glob.glob(os.path.join(image_dir, '*.'+img_format))
