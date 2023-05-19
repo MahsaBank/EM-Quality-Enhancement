@@ -17,36 +17,18 @@ import autokeras as ak
 from autoModel import get_data
 
 
-
-def image_file_to_json(img_path):
-    img_dir = os.path.dirname(img_path)
-    img_id = os.path.basename(img_path).split('.')[0]
-
-    return img_dir, [{'image_id': img_id}]
-
-
-def image_dir_to_json(img_dir, img_type='tif'):
-    img_paths = glob.glob(os.path.join(img_dir, '*.'+img_type))
-
-    samples = []
-    for img_path in img_paths:
-        img_id = os.path.basename(img_path).split('.')[0]
-        samples.append({'image_id': img_id})
-
-    return samples
-
-
 def predict(model, data_generator):
     return model.predict_generator(data_generator, workers=8, use_multiprocessing=True, verbose=1)
 
 
-def main(base_model_name, weights_file, image_source, predictions_file, model_file, img_format='tif'):
+def main(base_model_name, weights_file, image_dir, predictions_file, model_file, img_format):
+    
     # load samples
-    if os.path.isfile(image_source):
-        image_dir, samples = image_file_to_json(image_source)
-    else:
-        image_dir = image_source
-        samples = image_dir_to_json(image_dir, img_type='tif')
+    img_paths = glob.glob(os.path.join(image_dir, '*.'+img_format))
+    samples = []
+    for img_path in img_paths:
+        img_id = os.path.basename(img_path).split('.')[0]
+        samples.append({'image_id': img_id})
 
     # build model and load weights
     #model = tf.keras.models.load_model(model_file,custom_objects=ak.CUSTOM_OBJECTS)
@@ -95,11 +77,12 @@ def main(base_model_name, weights_file, image_source, predictions_file, model_fi
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--base-model-name', help='CNN base model name', default='InceptionV3')
-    parser.add_argument('-w', '--weights-file', help='path of weights file', default='/storage1/fs1/jlmorgan/Active/mahsa/containers/Emiqa/weights/weights_resnet_08_0.029.hdf5')
-    parser.add_argument('-is', '--image-source', help='image directory or file', default='/storage1/fs1/jlmorgan/Active/mahsa/quality_groups/test2')
+    parser.add_argument('-b', '--base-model-name', help='CNN base model name', default='resnet')
+    parser.add_argument('-w', '--weights-file', help='path of weights file', default='/storage1/fs1/jlmorgan/Active/mahsa/containers/Emiqa/weights/weights_resnet_09_0.023.hdf5')
+    parser.add_argument('-is', '--image-dir', help='image directory', default='/storage1/fs1/jlmorgan/Active/mahsa/quality_groups/test2')
     parser.add_argument('-pf', '--predictions-file', help='file with predictions', required=False, default='/storage1/fs1/jlmorgan/Active/mahsa/containers/Emiqa/predictions/')
     parser.add_argument('-m', '--model-file', help='path of model file', default="/storage1/fs1/jlmorgan/Active/mahsa/containers/Emiqa/auto_model_NormalizationConvBlockResnetXceptionDense/best_model")
+    parser.add_argument('-if', '--image-format', default='.tif')
 
     args = parser.parse_args()
 
