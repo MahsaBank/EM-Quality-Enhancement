@@ -5,13 +5,10 @@ import json
 import argparse
 import time
 import numpy as np
-from utils.utils import calc_mean_score, save_json
-#from handlers.model_builder import Nima
 from handlers.data_generator import TestDataGenerator
-from make_model import Emiqa
-from utilities import DataSequence
-#from train_unet import make_unet_regression_model
-from train_ResNet import make_resNet_model
+from tools/make_model_v2 import Emiqa
+from tools/utilities import DataSequence
+from tools/model_make_v1 import make_resNet_model
 import tensorflow as tf
 import autokeras as ak
 from autoModel import get_data
