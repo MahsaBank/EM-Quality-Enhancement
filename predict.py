@@ -11,7 +11,7 @@ from tools/utilities import DataSequence
 from tools/model_make_v1 import make_resNet_model
 import tensorflow as tf
 import autokeras as ak
-from autoModel import get_data
+from tools/utilities import get_data
 
 
 def predict(model, data_generator):
@@ -20,56 +20,32 @@ def predict(model, data_generator):
 
 def main(base_model_name, weights_file, image_dir, predictions_file, model_file, img_format):
     
-    # load samples
-    img_paths = glob.glob(os.path.join(image_dir, '*.'+img_format))
-    samples = []
-    for img_path in img_paths:
-        img_id = os.path.basename(img_path).split('.')[0]
-        samples.append({'image_id': img_id})
+    test_images_name = glob.glob(os.path.join(image_dir, '*.'+img_format))
 
     # build model and load weights
+    
     #model = tf.keras.models.load_model(model_file,custom_objects=ak.CUSTOM_OBJECTS)
-    #model.load_weights(weights_file)
-    #print(model.summary())
-    model = make_resNet_model(activation_function='relu',num_class=1, num_block=3, num_filter=16)
-    model.load_weights(weights_file)
-    tf.keras.saving.save_model(model,'/storage1/fs1/jlmorgan/Active/mahsa/containers/Emiqa/resnet50ModelforMatlab.h5')
-    print(model.summary())
     # emiqa = Emiqa(base_model_name=base_model_name, weights=None, num_class=1)
     # emiqa.create()
     # emiqa.Emiqa_model.load_weights(weights_file)
-
-
-    test_images_name = [image_dir+'/'+samples[i]['image_id']+'.tif' for i in range(len(samples))]
-    test_data = get_data(test_images_name, y_set=None, crop_size=[224,224])
+    # model = emiqa.Emiqa_model
+    
+    model = make_resNet_model(num_class=1)
+    model.load_weights(weights_file)
+    # print(model.summary())
+    
+    test_data = get_data(test_images_name, y_set=None, crop_size=[224,224], shuffle=False)
   
-    # initialize data generator
-    data_generator = TestDataGenerator(samples, image_dir, 5, 1, None,
-                                        img_format=img_format)
-    # emiqa.preprocess()
     # get predictions
+    
     time1 = time.time()
-    predictions = predict(model, data_generator)
-    # predictions = predict(emiqa.Emiqa_model, data_generator)
+    predictions = model.predict(test_data)
     time2 = time.time()
     total_time = time2 - time1
-    print("total time is:",total_time)
+    # print("total time is:",total_time)
+    
     np.savetxt(predictions_file+'predictions_'+base_model_name+'.txt', predictions, fmt='%.3f')
     np.savetxt(predictions_file+'samples_'+base_model_name+'.txt', samples, '%s')
-    i=0
-    for prediction in predictions:
-        print('the prediction for test image ',samples[i],'is ',prediction)
-        i=i+1
-
-    # calc mean scores and add to samples
-    #for i, sample in enumerate(samples):
-        #sample['mean_score_prediction'] = calc_mean_score(predictions[i])
-
-    #print(json.dumps(samples, indent=2))
-
-    #if predictions_file is not None:
-        #save_json(samples, predictions_file+base_model_name+'.json')
-
 
 if __name__ == '__main__':
 
