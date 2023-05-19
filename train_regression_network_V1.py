@@ -10,7 +10,6 @@ from utilities import DataSequence
 from keras.optimizers import Adam
 from keras.losses import mse
 from make_model_V1 import make_resNet_model, make_with_resBlocks
-from make_model_V2 import Emiqa
 
 
 def train(samples, base_model_name, batch_size, train_dir, epochs_train,
