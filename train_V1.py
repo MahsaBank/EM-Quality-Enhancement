@@ -78,7 +78,7 @@ if __name__=='__main__':
         os.makedirs(weight_dir)
     with open(args.data_dir, 'r') as file:
         all_samples = json.load(file)
-    # train(**args.__dict__)
+    
     train(samples=all_samples, base_model_name=args.base_model_name, batch_size=args.batch_size, num_class=args.num_class,
           train_dir=args.train_dir, epochs_train=args.epochs_train, available_weights=args.available_weights, crop_size=args.crop_size,
           learning_rate=args.learning_rate)
