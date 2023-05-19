@@ -15,11 +15,10 @@ from tools/utilities import get_data
 
 def main(base_model_name, weights_file, image_dir, predictions_file, model_file, img_format):
     
-    test_images_name = glob.glob(os.path.join(image_dir, '*.'+img_format))
-
     # build model and load weights
     
     #model = tf.keras.models.load_model(model_file,custom_objects=ak.CUSTOM_OBJECTS)
+    
     # emiqa = Emiqa(base_model_name=base_model_name, weights=None, num_class=1)
     # emiqa.create()
     # emiqa.Emiqa_model.load_weights(weights_file)
@@ -27,8 +26,10 @@ def main(base_model_name, weights_file, image_dir, predictions_file, model_file,
     
     model = make_resNet_model(num_class=1)
     model.load_weights(weights_file)
+    
     # print(model.summary())
     
+    test_images_name = glob.glob(os.path.join(image_dir, '*.'+img_format))
     test_data = get_data(test_images_name, y_set=None, crop_size=[224,224], shuffle=False)
   
     # get predictions
