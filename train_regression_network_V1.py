@@ -6,10 +6,10 @@ from tensorflow.python.keras import backend as k
 from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow as tf
-from utilities import DataSequence
+from tools/utilities import DataSequence
 from keras.optimizers import Adam
 from keras.losses import mse
-from make_model_V1 import make_resNet_model, make_with_resBlocks
+from tools/make_model_V1 import make_resNet_model, make_with_resBlocks
 
 
 def train(samples, base_model_name, batch_size, train_dir, epochs_train,
