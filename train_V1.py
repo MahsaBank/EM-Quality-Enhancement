@@ -16,10 +16,6 @@ from make_model_V1 import make_resNet_model, make_with_resBlocks
 from make_model_V2 import Emiqa
 
 
-colmap = cm.get_cmap('viridis', 256)
-np.savetxt('cmap.csv', (colmap.colors[...,0:3]*255).astype(np.uint8), fmt='%d', delimiter=',')
-
-
 def train(samples, base_model_name, batch_size, num_class, train_dir, epochs_train,
           available_weights, crop_size, learning_rate):
     model = make_resNet_model(num_class=num_class)
