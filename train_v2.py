@@ -1,12 +1,12 @@
 import argparse
 import json
 import os
-from tools/make_model_V2 import Emiqa
+from tools.make_model_V2 import Emiqa
 from tensorflow.python.keras import backend as k
 from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow as tf
-from tools/utilities import DataSequence
+from tools.utilities import DataSequence
 
 
 def train(samples, base_model_name, batch_size, num_class, train_dir, epochs_train_all, epochs_train_dense,
