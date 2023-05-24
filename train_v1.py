@@ -17,7 +17,6 @@ def train(samples, base_model_name, batch_size, train_dir, epochs_train,
           
     model = make_resNet_model(num_class=num_class)
 
-
     if available_weights is not None:
         model.load_weights(available_weights)
 
@@ -39,7 +38,6 @@ def train(samples, base_model_name, batch_size, train_dir, epochs_train,
         monitor='val_loss',
         verbose=1,
         save_best_only=True)
-    
     
     model.compile(optimizer=Adam(learning_rate=learning_rate), loss=mse)
     model.summary()
