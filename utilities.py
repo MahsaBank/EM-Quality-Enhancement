@@ -11,7 +11,7 @@ def crop_image(img, crop_size=[224, 224]):
     return img_arr[i:i+crop_size[0], j:j+crop_size[1], :]
 
 
-def get_data(x_set, y_set, crop_size, shufffle=False):
+def get_data(x_set, y_set, crop_size, shuffle=False):
     dat_len = len(x_set)
     indexes = [i for i in range(dat_len)]
     if shuffle:
