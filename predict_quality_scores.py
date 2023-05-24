@@ -11,7 +11,7 @@ PIL.Image.MAX_IMAGE_PIXELS = 500000000
 
 
 def extract_patches(img, stride, w_path, tile_name, patch_size=[224, 224], do_save=False):
-    height, width, depth = np.shape(img)
+    height, width, _ = np.shape(img)
     patches = []
 
     for y in range(0, height - patch_size[0] + 1, stride[0]):
@@ -25,8 +25,11 @@ def extract_patches(img, stride, w_path, tile_name, patch_size=[224, 224], do_sa
     return patches
 
 
-def calculate_qs(tiles_list, w_path, json_name, model_file):
+def calculate_qs(tiles_json_file, w_path, json_name, model_file):
+    with open(tiles_json_file, 'r') as file:
+        tiles_list = json.load(file)
     quality_scores = []
+    status = -1
     for tile in tiles_list:
         img = k.utils.load_img(tile['image_name'])
         height, width, depth = np.shape(img)
@@ -42,6 +45,9 @@ def calculate_qs(tiles_list, w_path, json_name, model_file):
     out_file = open(out_path, 'w')
     json.dump(quality_scores, out_file)
     out_file.close()
+    status = 2
+
+    return status
 
 
 if __name__ == '__main__':
@@ -54,7 +60,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    with open(args.tiles_json_file, 'r') as file:
-        tiles = json.load(file)
-
-    calculate_qs(tiles_list=tiles, w_path=args.write_path, json_name=args.output_name, model_file=args.model_file)
+    calculate_qs(tiles_json_file=args.tiles_json_file, w_path=args.write_path, json_name=args.output_name, model_file=args.model_file)
