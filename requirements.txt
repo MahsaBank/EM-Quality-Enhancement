@@ -22,4 +22,4 @@ catboost
 lightgbm
 flaky
 tabulate
-autoPyTorch
+tk
