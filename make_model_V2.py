@@ -7,7 +7,7 @@ from keras.optimizers import Adam
 from keras.losses import categorical_crossentropy, mse
 from keras.applications.inception_v3 import InceptionV3
 from keras.applications.vgg16 import VGG16
-from keras.applications.mobilenet_v3 import MobileNetV3Small
+import keras.applications.mobilenet_v3 as mobilenet
 from keras.applications.resnet import ResNet50
 
 
