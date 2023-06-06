@@ -6,33 +6,10 @@ import numpy as np
 import PIL.Image
 from tensorflow import keras as k
 import time
-# from tools.utilities import extract_patches
+from tools.utilities import extract_patches
 
 
 PIL.Image.MAX_IMAGE_PIXELS = 500000000
-
-
-def extract_patches(img, stride, w_path=None, tile_name=None, patch_size=[512, 512], do_save=True):
-    if len(np.shape(img)) < 3:
-        height, width = np.shape(img)
-    else:
-        height, width, _ = np.shape(img)
-    patches = []
-    indexes = []
-
-    for y in range(0, height - patch_size[0] + 1, stride[0]):
-        for x in range(0, width - patch_size[1] + 1, stride[1]):
-            if len(np.shape(img)) < 3:
-                patch = img[y:y + patch_size[0], x:x + patch_size[1]]
-            else:
-                patch = img[y:y + patch_size[0], x:x + patch_size[1], :]
-            if do_save:
-                k.utils.save_img(os.path.join(w_path, os.path.splitext(tile_name)[0]+'_y'+str(y)+'_x'+str(x)+'.png'),
-                                 patch)
-            patches.append(patch)
-            indexes.append({'y': y, 'x': x})
-
-    return patches, indexes
 
 
 def calculate_qs(tiles_json_file, w_path, json_name, model_file):
