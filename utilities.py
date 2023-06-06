@@ -6,6 +6,37 @@ import tensorflow as tf
 from tensorflow import keras as k
 
 
+def preprocess_image(img):
+    img = np.array(img)
+    img = (img - 127.5) / 127.5
+    return img
+
+
+def process_patches(patches, preprocess):
+    processed_patches = []
+    for patch in patches:
+        # patch = rgb_to_gray(patch)
+        if preprocess == 1:
+            patch = preprocess_image(patch)
+        else:
+            patch = deprocess_image(patch)
+        processed_patches.append(patch)
+    return processed_patches
+
+
+def deprocess_image(img):
+    img = img * 127.5 + 127.5
+    return img.astype('uint8')
+
+
+def stich_patches(patches, indexes, original_image, patch_size):
+    for itr in range(len(indexes)):
+        y = int(indexes[itr]['y'])
+        x = int(indexes[itr]['x'])
+        original_image[y:y + patch_size, x:x + patch_size, :] = patches[itr]
+    return original_image
+
+
 def extract_patches(img, stride, w_path=None, tile_name=None, patch_size=[224, 224], do_save=False):
     if len(np.shape(img)) < 3:
         height, width = np.shape(img)
