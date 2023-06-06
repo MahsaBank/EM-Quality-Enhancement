@@ -13,7 +13,6 @@ PIL.Image.MAX_IMAGE_PIXELS = 500000000
 
 
 def improve_using_gan(weights_file, quality_file, write_path, subtile_position, quality_threshold, patch_size):
-    subtile_position = [17000, 17600, 17000, 17600]
     with open(quality_file, 'r') as file:
         all_tiles = json.load(file)
     tiles_for_improving = [tile["image_name"] for tile in all_tiles if float(tile["quality_score"]) < quality_threshold]
