@@ -75,7 +75,7 @@ if __name__ == '__main__':
     pars.add_argument('--quality_scores', default='C:/Users/Mahsa/PycharmProjects/Emiqa/quality_scores.json')
     pars.add_argument('--output_path', default='C:/Users/Mahsa/PycharmProjects/Emiqa/test_images')
     pars.add_argument('--subtile_position', default=None)
-    pars.add_argument('--quality_threshold', default=0.6, type=float)
+    pars.add_argument('--quality_threshold', default=0.5, type=float)
     pars.add_argument('--patch_size', default=256, type=int)
     args = pars.parse_args()
 
