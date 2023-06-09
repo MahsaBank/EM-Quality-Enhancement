@@ -4,6 +4,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras as k
+from osgeo import gdal
 
 
 def preprocess_image(img):
@@ -54,6 +55,26 @@ def extract_patches(img, stride, w_path=None, tile_name=None, patch_size=[224, 2
             if do_save:
                 k.utils.save_img(os.path.join(w_path, os.path.splitext(tile_name)[0]+'_y'+str(y)+'_x'+str(x)+'.png'),
                                  patch)
+            patches.append(patch)
+            indexes.append({'y': y, 'x': x})
+
+    return patches, indexes
+
+
+def extract_patches_gdal(tile, patch_size=[512, 512]):
+
+    patches = []
+    indexes = []
+    ds = gdal.Open(tile, gdal.GA_ReadOnly)
+    rb = ds.GetRasterBand(1)
+    height = rb.XSize
+    width = rb.YSize
+    stride = [round(height // 2), round(width // 2)]
+    for y in range(0, height - patch_size[0] + 1, stride[0]):
+        for x in range(0, width - patch_size[1] + 1, stride[1]):
+            patch = rb.ReadAsArray(y, x, patch_size[0], patch_size[1])
+            patch = 255 - patch
+            patch = np.stack((patch,) * 3, axis=-1)
             patches.append(patch)
             indexes.append({'y': y, 'x': x})
 
