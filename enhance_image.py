@@ -7,7 +7,7 @@ from PIL import Image
 import numpy as np
 from tools.utilities import preprocess_image, deprocess_image, extract_patches, stich_patches, rgb_to_gray, \
     process_patches, gray_to_rgb
-from deblurgan.model import generator_model
+from deblurgan.model import generator_model # https://github.com/RaphaelMeudec/deblur-gan.git
 
 PIL.Image.MAX_IMAGE_PIXELS = 500000000
 
