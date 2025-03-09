@@ -1,0 +1,1 @@
+This repository contains code for calculating quality scores using GAN (QEN) and subsequently enhancing low-quality images using Deblur-GAN (Meudec, R. (n.d.). deblur-gan [GitHub repository]. GitHub. Retrieved March 7, 2025, from https://github.com/RaphaelMeudec/deblur-gan). I retrained Meudec’s proposed Deblur-GAN model using our EM images.
